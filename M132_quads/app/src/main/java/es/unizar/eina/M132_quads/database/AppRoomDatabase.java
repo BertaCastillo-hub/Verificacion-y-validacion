@@ -80,7 +80,7 @@ public abstract class AppRoomDatabase extends RoomDatabase {
 
                 // Poblar la tabla 'Casco' con datos de ejemplo para Cascos.
                 if (idReserva1 != -1) {
-                    Casco casco1 = new Casco(2, "1111ABC", (int) idReserva1);
+                    Casco casco1 = new Casco(1, "1111ABC", (int) idReserva1);
                     cascoDao.insert(casco1);
                 }
 
