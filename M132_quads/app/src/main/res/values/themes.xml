@@ -1,0 +1,31 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema Base de la Aplicación -->
+    <style name="Base.Theme.M132_quads" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <!-- Color Primario: usado para botones, FABS, etc. -->
+        <item name="colorPrimary">@color/nav_bar_background_dark_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- ¡CLAVE! Color para las superficies como la Barra de Navegación -->
+        <item name="colorSurface">@color/darkBlue</item>
+        <item name="colorOnSurface">@color/white</item> <!-- Color por defecto del texto/iconos sobre la superficie -->
+
+        <!-- Color de fondo general de la pantalla -->
+        <item name="android:colorBackground">@color/white</item>
+
+        <!-- Barra de estado (la de arriba del todo) -->
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.M132_quads" parent="Base.Theme.M132_quads" />
+
+    <!-- Estilo para el indicador (la "píldora") del ítem activo -->
+    xml
+    <!-- Estilo para el indicador (la "píldora") del ítem activo -->
+    <style name="App.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <!-- USA ESTE ATRIBUTO: "itemActiveIndicatorStyle" solo afecta a la píldora -->
+        <item name="android:color">@color/nav_active_indicator_color</item>
+    </style>
+
+</resources>
+    

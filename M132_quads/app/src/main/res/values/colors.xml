@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="darkBlue">#FF3D3DB5</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="buttonLabel">#FFFFFF</color>
+    <!-- Colores para la barra de navegación -->
+    <color name="nav_bar_background_dark_blue">#FF3D3DB5</color> <!-- Azul oscuro -->
+    <color name="inactive_nav_item_color">#FFFFFFFF</color> <!-- Blanco con ~60% de opacidad -->
+    <!-- Color para la "píldora" del ítem activo -->
+    <color name="nav_active_indicator_color">#FF9DB4E6</color> <!-- Azul muy claro, opaco -->
+</resources>

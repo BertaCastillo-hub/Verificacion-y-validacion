@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Estado: El ítem está seleccionado (state_checked="true"). El texto/icono será blanco. -->
+    <item android:state_checked="true" android:color="@color/nav_active_indicator_color" />
+
+    <!-- Estado por defecto: El ítem no está seleccionado. El texto/icono será blanco semi-transparente. -->
+    <item android:color="@color/nav_active_indicator_color" />
+</selector>
+    

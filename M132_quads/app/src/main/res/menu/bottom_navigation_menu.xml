@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"><!-- Item para la pantalla de Quads -->
+    <!-- Asegúrate de que el icono @drawable/ic_quad_icon y el string @string/titulo_quads existen -->
+    <item
+        android:id="@+id/navigation_quads"
+        android:icon="@drawable/ic_quad_icon"
+        android:title="@string/titulo_quads" />
+
+    <!-- Item para la pantalla de Reservas -->
+    <!-- Asegúrate de que el icono @drawable/ic_reservas_icon y el string @string/titulo_reservas existen -->
+    <item
+        android:id="@+id/navigation_reservas"
+        android:icon="@drawable/ic_reservas_icon"
+        android:title="@string/titulo_reservas" />
+
+</menu>

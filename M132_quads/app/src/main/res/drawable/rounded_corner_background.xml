@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Define el color de fondo del rectángulo. En este caso, blanco. -->
+    <solid android:color="@android:color/white" />
+
+    <!-- Define el radio de las esquinas para hacerlas redondeadas. -->
+    <!-- Un valor más alto significa esquinas más curvas. 16dp es un buen punto de partida. -->
+    <corners android:radius="16dp" />
+
+</shape>

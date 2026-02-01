@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="31">
+
+        <activity
+            android:name="es.unizar.eina.M132_quads.ui.Inicio"
+            android:exported="true">
+            <!-- Es exportada para permitir que el sistema de Android la lance. -->
+            <!-- Se indica que es la pantalla que se muestra al iniciar la aplicación. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="es.unizar.eina.M132_quads.ui.QuadEdit" />
+        <activity
+            android:name="es.unizar.eina.M132_quads.ui.QuadList" />
+        <activity
+            android:name="es.unizar.eina.M132_quads.ui.QuadDetail" />
+        <activity
+            android:name="es.unizar.eina.M132_quads.ui.ReservaEdit" />
+        <activity
+            android:name="es.unizar.eina.M132_quads.ui.ReservaList" />
+        <activity
+            android:name="es.unizar.eina.M132_quads.ui.ReservaDetail" />
+        <activity
+            android:name="es.unizar.eina.M132_quads.ui.CascoEdit" />
+        <activity
+            android:name="es.unizar.eina.M132_quads.ui.CascoList" />
+
+    </application>
+
+</manifest>

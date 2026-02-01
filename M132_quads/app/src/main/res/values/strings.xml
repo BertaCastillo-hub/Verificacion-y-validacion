@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">M132_quads</string>
+    <string name="hint_title">Type title ...</string>
+    <string name="hint_body">Type body ...</string>
+    <string name="button_save">Save</string>
+    <string name="empty_not_saved">Matrícula, tipo y precio son obligatorios.</string>
+    <string name="add_quad">Add quad</string>
+    <string name="add_reserva">Add reserva</string>
+    <string name="listado_quads">Listado de quads</string>
+    <string name="listado_reservas">Listado de reservas</string>
+    <string name="listado_cascos">Quads de la reserva</string>
+    <string name="menu_delete">Delete Note</string>
+    <string name="menu_edit">Edit Note</string>
+    <string name="title">Title</string>
+    <string name="body">Body</string>
+    <string name="eliminar_quad">Eliminar quad</string>
+    <string name="titulo_quads">Quads</string>
+    <string name="titulo_reservas">Reservas</string>
+    <string-array name="opciones_ordenar_quads">
+        <item>Matrícula</item>
+        <item>Tipo</item>
+        <item>Precio</item>
+    </string-array>
+    <string-array name="opciones_ordenar_reservas">
+        <item>Nombre Cliente</item>
+        <item>Número Móvil</item>
+        <item>Fecha Recogida</item>
+        <item>Fecha Devolución</item>
+    </string-array>
+    <string name="nuevo_quad">Nuevo quad</string>
+    <string name="modificar_quad">Modificar quad</string>
+    <string name="matricula">Matrícula</string>
+    <string name="tipo">Tipo:</string>
+    <string name="monoplaza">Monoplaza</string>
+    <string name="biplaza">Biplaza</string>
+    <string name="precio">Precio</string>
+    <string name="descripcion_marca">Descripción / Marca</string>
+    <string name="borrar">BORRAR</string>
+    <string name="crear">CREAR</string>
+    <string name="cancelar">CANCELAR</string>
+    <string name="eliminar">ELIMINAR</string>
+    <string name="modificar">MODIFICAR</string>
+    <string name="listado_de_quads">Listado de quads</string>
+    <string name="listado_de_reservas">Listado de reservas</string>
+    <string name="detalles_del_quad">Detalles del quad</string>
+    <string name="detalles_de_la_reserva">Detalles de la reserva</string>
+    <string name="quads">QUADS</string>
+    <string name="reservas">RESERVAS</string>
+    <string name="gestion">Gestión</string>
+    <string-array name="opciones_numero_cascos">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>
