@@ -1,17 +1,12 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
+# Ficheros de compilación y temporales
 /build
 /captures
 .externalNativeBuild
 .cxx
-local.properties
-/.idea/deploymentTargetSelector.xml
-/.idea/migrations.xml
+.gradle
+
+# Configuración local (Aquí está el cambio clave)
+/local.properties
+.idea/
+*.iml
+.DS_Store
