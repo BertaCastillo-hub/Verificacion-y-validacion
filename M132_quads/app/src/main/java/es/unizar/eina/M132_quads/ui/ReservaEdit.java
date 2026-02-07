@@ -77,8 +77,16 @@ public class ReservaEdit extends AppCompatActivity {
                 if (reserva != null) {
                     mNombreText.setText(reserva.getNombreCliente());
                     mMovilText.setText(String.valueOf(reserva.getNumeroMovil()));
-                    mFechaRecogidaText.setText(reserva.getFechaRecogida());
-                    mFechaDevolucionText.setText(reserva.getFechaDevolucion());
+
+                    // Convertir long a String para mostrar
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    if (reserva.getFechaRecogida() > 0) {
+                        mFechaRecogidaText.setText(sdf.format(new Date(reserva.getFechaRecogida())));
+                    }
+                    if (reserva.getFechaDevolucion() > 0) {
+                        mFechaDevolucionText.setText(sdf.format(new Date(reserva.getFechaDevolucion())));
+                    }
+
                     mCurrentPrecioTotal = reserva.getPrecioTotal();
                 }
             });
@@ -115,11 +123,26 @@ public class ReservaEdit extends AppCompatActivity {
 
         int movil = Integer.parseInt(movilStr);
 
-        String fechaRecogida = mFechaRecogidaText.getText().toString();
-        String fechaDevolucion = mFechaDevolucionText.getText().toString();
+        String fechaRecogidaStr = mFechaRecogidaText.getText().toString();
+        String fechaDevolucionStr = mFechaDevolucionText.getText().toString();
 
-        if (TextUtils.isEmpty(fechaRecogida) || TextUtils.isEmpty(fechaDevolucion)) {
+        if (TextUtils.isEmpty(fechaRecogidaStr) || TextUtils.isEmpty(fechaDevolucionStr)) {
             Toast.makeText(this, "Seleccione las fechas.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        long fechaRecogida = 0;
+        long fechaDevolucion = 0;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        try {
+            Date dateRecogida = sdf.parse(fechaRecogidaStr);
+            Date dateDevolucion = sdf.parse(fechaDevolucionStr);
+            if (dateRecogida != null)
+                fechaRecogida = dateRecogida.getTime();
+            if (dateDevolucion != null)
+                fechaDevolucion = dateDevolucion.getTime();
+        } catch (ParseException e) {
+            Toast.makeText(this, "Error en el formato de fecha", Toast.LENGTH_SHORT).show();
             return;
         }
 

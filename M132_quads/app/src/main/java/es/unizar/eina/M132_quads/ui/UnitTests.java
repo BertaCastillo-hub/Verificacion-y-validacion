@@ -216,7 +216,7 @@ public class UnitTests {
 
         // Caso 1: Válido [idReserva > 0] (Existe en BD)
         // Insertamos primero para asegurar que existe.
-        Reserva r1 = new Reserva(0, "Cliente Test 1", 123456789, "01/01/2023", "02/01/2023", 10000);
+        Reserva r1 = new Reserva(0, "Cliente Test 1", 123456789, 1672531200000L, 1672617600000L, 10000);
         long idGenerado = repo.insert(r1);
         r1.setIdReserva((int) idGenerado);
 
@@ -226,7 +226,7 @@ public class UnitTests {
         Log.d(TAG, "Caso 1: Eliminar Reserva válida (ID " + idGenerado + "). Esperado: 1. Obtenido: " + res1);
 
         // Caso 2: Inválido [idReserva <= 0]
-        Reserva r2 = new Reserva(-1, "Cliente Test 2", 123456789, "2023-01-01", "2023-01-02", 10000);
+        Reserva r2 = new Reserva(-1, "Cliente Test 2", 123456789, 1672531200000L, 1672617600000L, 10000);
         int res2 = repo.delete(r2);
         Log.d(TAG, "Caso 2: ID Reserva inválido (-1). Esperado: 0. Obtenido: " + res2);
 
@@ -245,7 +245,9 @@ public class UnitTests {
         // del usuario,
         // pero es necesario para el constructor. Ponemos 5000.
         // El ID es autogenerado (0).
-        Reserva r1 = new Reserva(0, "Laura", 654000000, "01/12/2025", "03/12/2025", 5000);
+        // 01/12/2025 -> 1764633600000L
+        // 03/12/2025 -> 1764806400000L
+        Reserva r1 = new Reserva(0, "Laura", 654000000, 1764633600000L, 1764806400000L, 5000);
         long res1 = repo.insert(r1);
         Log.d(TAG, "Caso 1: Insertar Reserva válida. Esperado: >0. Obtenido: " + res1);
         if (res1 > 0) {
@@ -255,7 +257,7 @@ public class UnitTests {
 
         // Caso 3: Inválido [nombreCliente null]
         try {
-            Reserva r3 = new Reserva(0, null, 654000000, "01/12/2025", "03/12/2025", 5000);
+            Reserva r3 = new Reserva(0, null, 654000000, 1764633600000L, 1764806400000L, 5000);
             long res3 = repo.insert(r3);
             Log.d(TAG, "Caso 3: Nombre null. Esperado: -1. Obtenido: " + res3);
             if (res3 > 0) {
@@ -272,80 +274,65 @@ public class UnitTests {
         // "null".
         Log.d(TAG, "Caso 4: Movil null. No aplicable en Java con tipo int primitivo (Error compilación).");
 
-        // Caso 5: Inválido [fechaRecogida null]
+        // Caso 5: Inválido [fechaRecogida null] -> long no puede ser null
+        // Intentamos con 0 o negativo
         try {
-            Reserva r5 = new Reserva(0, "Laura", 654000000, null, "03/12/2025", 5000);
+            Reserva r5 = new Reserva(0, "Laura", 654000000, 0, 1764806400000L, 5000);
             long res5 = repo.insert(r5);
-            Log.d(TAG, "Caso 5: FechaRecogida null. Esperado: -1. Obtenido: " + res5);
+            Log.d(TAG, "Caso 5: FechaRecogida 0 (inválida). Esperado: -1. Obtenido: " + res5);
             if (res5 > 0) {
                 r5.setIdReserva((int) res5);
                 repo.delete(r5);
             }
         } catch (Exception e) {
-            Log.d(TAG, "Caso 5: FechaRecogida null. Excepción: " + e.getMessage());
+            Log.d(TAG, "Caso 5: FechaRecogida 0. Excepción: " + e.getMessage());
         }
 
-        // Caso 6: Inválido [fechaRecogida no válida 40/12/2025]
-        // Si no hay validación de formato en repository o constructor, esto se
-        // insertará.
-        Reserva r6 = new Reserva(0, "Laura", 654000000, "40/12/2025", "03/12/2025", 5000);
+        // Caso 6: Inválido [fechaRecogida no válida] -> Negativo
+        Reserva r6 = new Reserva(0, "Laura", 654000000, -100L, 1764806400000L, 5000);
         long res6 = repo.insert(r6);
-        Log.d(TAG, "Caso 6: FechaRecogida inválida (40/12/2025). Esperado: -1. Obtenido: " + res6);
+        Log.d(TAG, "Caso 6: FechaRecogida negativa. Esperado: -1. Obtenido: " + res6);
         if (res6 > 0) {
             r6.setIdReserva((int) res6);
             repo.delete(r6); // Cleaning up
         }
 
-        // Caso 7: Inválido [fechaRecogida formato incorrecto 12/2025/01]
-        Reserva r7 = new Reserva(0, "Laura", 654000000, "12/2025/01", "03/12/2025", 5000);
-        long res7 = repo.insert(r7);
-        Log.d(TAG, "Caso 7: FechaRecogida formato incorrecto (12/2025/01). Esperado: -1. Obtenido: " + res7);
-        if (res7 > 0) {
-            r7.setIdReserva((int) res7);
-            repo.delete(r7); // Cleaning up
-        }
+        // Caso 7: Inválido [fechaRecogida formato incorrecto] -> No aplica a Long
+        Log.d(TAG, "Caso 7: FechaRecogida formato incorrecto. No aplica a Long.");
 
-        // Caso 8: Inválido [fechaDevolucion null]
+        // Caso 8: Inválido [fechaDevolucion null] -> 0
         try {
-            Reserva r8 = new Reserva(0, "Laura", 654000000, "01/12/2025", null, 5000);
+            Reserva r8 = new Reserva(0, "Laura", 654000000, 1764633600000L, 0, 5000);
             long res8 = repo.insert(r8);
-            Log.d(TAG, "Caso 8: FechaDevolucion null. Esperado: -1. Obtenido: " + res8);
+            Log.d(TAG, "Caso 8: FechaDevolucion 0. Esperado: -1. Obtenido: " + res8);
             if (res8 > 0) {
                 r8.setIdReserva((int) res8);
                 repo.delete(r8);
             }
         } catch (Exception e) {
-            Log.d(TAG, "Caso 8: FechaDevolucion null. Excepción: " + e.getMessage());
+            Log.d(TAG, "Caso 8: FechaDevolucion 0. Excepción: " + e.getMessage());
         }
 
-        // Caso 9: Inválido [fechaDevolucion fecha no válida 40/12/2025]
-        Reserva r9 = new Reserva(0, "Laura", 654000000, "01/12/2025", "40/12/2025", 5000);
+        // Caso 9: Inválido [fechaDevolucion fecha no válida] -> Negativo
+        Reserva r9 = new Reserva(0, "Laura", 654000000, 1764633600000L, -100L, 5000);
         long res9 = repo.insert(r9);
-        Log.d(TAG, "Caso 9: FechaDevolucion inválida (40/12/2025). Esperado: -1. Obtenido: " + res9);
+        Log.d(TAG, "Caso 9: FechaDevolucion negativa. Esperado: -1. Obtenido: " + res9);
         if (res9 > 0) {
             r9.setIdReserva((int) res9);
             repo.delete(r9); // Cleaning up
         }
 
-        // Caso 10 (mismo nombre que anterior en la tabla, asumimos Caso 10 real):
-        // Inválido [fechaDevolucion formato incorrecto 12/2025/03]
-        Reserva r10 = new Reserva(0, "Laura", 654000000, "01/12/2025", "12/2025/03", 5000);
+        // Caso 10: Inválido [fechaDevolucion anterior a fechaRecogida]
+        Reserva r10 = new Reserva(0, "Laura", 654000000, 1764633600000L, 1764633600000L - 86400000L, 5000);
         long res10 = repo.insert(r10);
-        Log.d(TAG, "Caso 10: FechaDevolucion formato incorrecto (12/2025/03). Esperado: -1. Obtenido: " + res10);
+        Log.d(TAG, "Caso 10: FechaDevolucion anterior a Recogida. Esperado: -1. Obtenido: " + res10);
         if (res10 > 0) {
             r10.setIdReserva((int) res10);
             repo.delete(r10); // Cleaning up
         }
 
         // Caso 11 (segundo con id 10 en la tabla):
-        // Inválido [fechaDevolucion anterior a fechaRecogida]
-        Reserva r11 = new Reserva(0, "Laura", 654000000, "01/12/2025", "01/11/2025", 5000);
-        long res11 = repo.insert(r11);
-        Log.d(TAG, "Caso 11: FechaDevolucion anterior a Recogida. Esperado: -1. Obtenido: " + res11);
-        if (res11 > 0) {
-            r11.setIdReserva((int) res11);
-            repo.delete(r11); // Cleaning up
-        }
+        // Replicamos el caso de devolución anterior si fuera necesario, ya cubierto.
 
         Log.d(TAG, "Pruebas de inserción Reserva finalizadas.");
     }
@@ -354,24 +341,24 @@ public class UnitTests {
         Log.d(TAG, "----- PRUEBAS update ReservaRepository -----");
 
         // Preparación: Insertar una reserva válida inicial para las pruebas
-        Reserva rBase = new Reserva(0, "Base Client", 600000000, "01/01/2025", "02/01/2025", 5000);
+        Reserva rBase = new Reserva(0, "Base Client", 600000000, 1764633600000L, 1764806400000L, 5000);
         long idBase = repo.insert(rBase);
         rBase.setIdReserva((int) idBase);
         Log.d(TAG, "Preparación: Reserva Base insertada con ID: " + idBase);
 
         // Caso 1: Válido [Update normal] (Existe BD)
-        Reserva r1 = new Reserva((int) idBase, "Laura", 654000000, "01/12/2025", "03/12/2025", 50);
+        Reserva r1 = new Reserva((int) idBase, "Laura", 654000000, 1764633600000L, 1764806400000L, 50);
         int res1 = repo.update(r1);
         Log.d(TAG, "Caso 1: Actualizar Reserva válida. Esperado: 1. Obtenido: " + res1);
 
         // Caso 2: Inválido [idReserva 0] (O negativo)
-        Reserva r2 = new Reserva(0, "Laura", 654000000, "01/12/2025", "03/12/2025", 50);
+        Reserva r2 = new Reserva(0, "Laura", 654000000, 1764633600000L, 1764806400000L, 50);
         int res2 = repo.update(r2);
         Log.d(TAG, "Caso 2: ID 0. Esperado: 0. Obtenido: " + res2);
 
         // Caso 3: Inválido [nombreCliente null]
         try {
-            Reserva r3 = new Reserva((int) idBase, null, 654000000, "01/12/2025", "03/12/2025", 50);
+            Reserva r3 = new Reserva((int) idBase, null, 654000000, 1764633600000L, 1764806400000L, 50);
             int res3 = repo.update(r3);
             Log.d(TAG, "Caso 3: Nombre null. Esperado: 0. Obtenido: " + res3);
         } catch (Exception e) {
@@ -381,62 +368,53 @@ public class UnitTests {
         // Caso 4: Inválido [numeroMovil null] -> No aplicable int primitivo.
         Log.d(TAG, "Caso 4: Movil null. No aplicable en Java con int primitivo.");
 
-        // Caso 5: Inválido [fechaRecogida null]
+        // Caso 5: Inválido [fechaRecogida null] -> 0
         try {
-            Reserva r5 = new Reserva((int) idBase, "Laura", 654000000, null, "03/12/2025", 50);
+            Reserva r5 = new Reserva((int) idBase, "Laura", 654000000, 0, 1764806400000L, 50);
             int res5 = repo.update(r5);
-            Log.d(TAG, "Caso 5: FechaRecogida null. Esperado: 0. Obtenido: " + res5);
+            Log.d(TAG, "Caso 5: FechaRecogida 0. Esperado: 0. Obtenido: " + res5);
         } catch (Exception e) {
-            Log.d(TAG, "Caso 5: FechaRecogida null. Excepción: " + e.getMessage());
+            Log.d(TAG, "Caso 5: FechaRecogida 0. Excepción: " + e.getMessage());
         }
 
-        // Caso 6: Inválido [fechaRecogida no válida 40/12/2025]
-        Reserva r6 = new Reserva((int) idBase, "Laura", 654000000, "40/12/2025", "03/12/2025", 50);
+        // Caso 6: Inválido [fechaRecogida no válida] -> Negativo
+        Reserva r6 = new Reserva((int) idBase, "Laura", 654000000, -100L, 1764806400000L, 50);
         int res6 = repo.update(r6);
-        Log.d(TAG, "Caso 6: FechaRecogida inválida. Esperado: 0. Obtenido: " + res6);
+        Log.d(TAG, "Caso 6: FechaRecogida negativa. Esperado: 0. Obtenido: " + res6);
 
-        // Caso 7: Inválido [fechaRecogida formato incorrecto]
-        Reserva r7 = new Reserva((int) idBase, "Laura", 654000000, "12/2025/01", "03/12/2025", 50);
-        int res7 = repo.update(r7);
-        Log.d(TAG, "Caso 7: FechaRecogida formato incorrecto. Esperado: 0. Obtenido: " + res7);
+        // Caso 7: Inválido [fechaRecogida formato incorrecto] -> No aplica
+        Log.d(TAG, "Caso 7: FechaRecogida formato incorrecto. No aplica.");
 
-        // Caso 8: Inválido [fechaDevolucion null]
+        // Caso 8: Inválido [fechaDevolucion null] -> 0
         try {
-            Reserva r8 = new Reserva((int) idBase, "Laura", 654000000, "01/12/2025", null, 50);
+            Reserva r8 = new Reserva((int) idBase, "Laura", 654000000, 1764633600000L, 0, 50);
             int res8 = repo.update(r8);
-            Log.d(TAG, "Caso 8: FechaDevolucion null. Esperado: 0. Obtenido: " + res8);
+            Log.d(TAG, "Caso 8: FechaDevolucion 0. Esperado: 0. Obtenido: " + res8);
         } catch (Exception e) {
-            Log.d(TAG, "Caso 8: FechaDevolucion null. Excepción: " + e.getMessage());
+            Log.d(TAG, "Caso 8: FechaDevolucion 0. Excepción: " + e.getMessage());
         }
 
-        // Caso 9: Inválido [fechaDevolucion no válida]
-        Reserva r9 = new Reserva((int) idBase, "Laura", 654000000, "01/12/2025", "40/12/2025", 50);
+        // Caso 9: Inválido [fechaDevolucion no válida] -> Negativo
+        Reserva r9 = new Reserva((int) idBase, "Laura", 654000000, 1764633600000L, -100L, 50);
         int res9 = repo.update(r9);
-        Log.d(TAG, "Caso 9: FechaDevolucion inválida. Esperado: 0. Obtenido: " + res9);
+        Log.d(TAG, "Caso 9: FechaDevolucion negativa. Esperado: 0. Obtenido: " + res9);
 
-        // Caso 10: Inválido [fechaDevolucion formato incorrecto]
-        Reserva r10 = new Reserva((int) idBase, "Laura", 654000000, "01/12/2025", "12/2025/03", 50);
+        // Caso 10: Inválido [fechaDevolucion anterior a fechaRecogida]
+        Reserva r10 = new Reserva((int) idBase, "Laura", 654000000, 1764633600000L, 1764633600000L - 86400000L, 50);
         int res10 = repo.update(r10);
-        Log.d(TAG, "Caso 10: FechaDevolucion formato incorrecto. Esperado: 0. Obtenido: " + res10);
-
-        // Caso 11: Inválido [fechaDevolucion anterior a fechaRecogida]
-        Reserva r11 = new Reserva((int) idBase, "Laura", 654000000, "01/12/2025", "01/11/2025", 50);
-        int res11 = repo.update(r11);
-        Log.d(TAG, "Caso 11: FechaDevolucion anterior. Esperado: 0. Obtenido: " + res11);
+        Log.d(TAG, "Caso 10: FechaDevolucion anterior. Esperado: 0. Obtenido: " + res10);
 
         // Caso 12: Inválido [precioTotal null] -> No aplicable int primitivo
         Log.d(TAG, "Caso 12: Precio null. No aplicable en Java con int primitivo.");
 
-        // Caso 13 (asimilado a precio <= 0 o similar, tabla cortada en imagen pero
-        // inferible):
+        // Caso 13
         // Inválido [precioTotal -1]
-        Reserva r13 = new Reserva((int) idBase, "Laura", 654000000, "01/12/2025", "03/12/2025", -1);
+        Reserva r13 = new Reserva((int) idBase, "Laura", 654000000, 1764633600000L, 1764806400000L, -1);
         int res13 = repo.update(r13);
         Log.d(TAG, "Caso 13: Precio negativo. Esperado: 0. Obtenido: " + res13);
 
-        // Caso 14: No existe reserva con ese ID (Simulamos borrando y actualizando o
-        // usando otro ID)
-        Reserva r14 = new Reserva(999999, "Laura", 654000000, "01/12/2025", "03/12/2025", 50);
+        // Caso 14: No existe reserva con ese ID
+        Reserva r14 = new Reserva(999999, "Laura", 654000000, 1764633600000L, 1764806400000L, 50);
         int res14 = repo.update(r14);
         Log.d(TAG, "Caso 14: ID no existe. Esperado: 0. Obtenido: " + res14);
 
@@ -493,7 +471,7 @@ public class UnitTests {
         Log.d(TAG, "Caso 7: Insertando 20000 Reservas... (Puede tardar)");
         long startR7 = System.currentTimeMillis();
         for (int i = 0; i < 20000; i++) {
-            Reserva r = new Reserva(0, "Cliente Vol " + i, 600000000 + i, "01/01/2023", "05/01/2023", 10000);
+            Reserva r = new Reserva(0, "Cliente Vol " + i, 600000000 + i, 1672531200000L, 1672876800000L, 10000);
             reservaRepo.insert(r);
         }
         long endR7 = System.currentTimeMillis();
@@ -504,7 +482,7 @@ public class UnitTests {
         Log.d(TAG, "Caso 8: Insertando 20001 Reservas... (Puede tardar)");
         long startR8 = System.currentTimeMillis();
         for (int i = 0; i < 20001; i++) {
-            Reserva r = new Reserva(0, "Cliente Vol2 " + i, 600000000 + i, "01/01/2023", "05/01/2023", 10000);
+            Reserva r = new Reserva(0, "Cliente Vol2 " + i, 600000000 + i, 1672531200000L, 1672876800000L, 10000);
             reservaRepo.insert(r);
         }
         long endR8 = System.currentTimeMillis();

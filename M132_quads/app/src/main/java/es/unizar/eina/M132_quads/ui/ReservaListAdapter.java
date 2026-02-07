@@ -70,8 +70,8 @@ public class ReservaListAdapter extends ListAdapter<Reserva, ReservaViewHolder> 
             // Se comparan los campos de las dos reservas pasadas como parámetro para
             // comprobar si son iguales.
             return oldItem.getNombreCliente().equals(newItem.getNombreCliente())
-                    && oldItem.getFechaDevolucion().equals(newItem.getFechaDevolucion())
-                    && oldItem.getFechaRecogida().equals(newItem.getFechaRecogida());
+                    && oldItem.getFechaDevolucion() == newItem.getFechaDevolucion()
+                    && oldItem.getFechaRecogida() == newItem.getFechaRecogida();
         }
     }
 }

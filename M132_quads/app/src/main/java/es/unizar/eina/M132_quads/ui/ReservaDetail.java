@@ -14,6 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import es.unizar.eina.M132_quads.R;
 import es.unizar.eina.M132_quads.database.Reserva;
 import es.unizar.eina.send.SendAbstraction;
@@ -121,8 +124,17 @@ public class ReservaDetail extends AppCompatActivity {
         if (mTvMovil != null)
             mTvMovil.setText(String.valueOf(reserva.getNumeroMovil()));
 
+        // Se dispone de las fechas de tipo long (representación del tiempo Unix) y se
+        // quieren mostrar como texto en formato dd/MM/yyyy.
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String rangoFechas = "";
         if (mTvFechas != null) {
-            String rangoFechas = reserva.getFechaRecogida() + " - " + reserva.getFechaDevolucion();
+            if (reserva.getFechaRecogida() > 0) {
+                rangoFechas = sdf.format(new Date(reserva.getFechaRecogida()));
+            }
+            if (reserva.getFechaDevolucion() > 0) {
+                rangoFechas = rangoFechas + " - " + sdf.format(new Date(reserva.getFechaDevolucion()));
+            }
             mTvFechas.setText(rangoFechas);
         }
 

@@ -36,8 +36,9 @@ class ReservaViewHolder extends RecyclerView.ViewHolder {
             nombreTextView.setText(reserva.getNombreCliente());
 
             // Se concatenan las fechas en 1 solo string para mostrarlo en la lista.
-            String fechaRecogida = reserva.getFechaRecogida();
-            String fechaDevolucion = reserva.getFechaDevolucion();
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+            String fechaRecogida = sdf.format(new java.util.Date(reserva.getFechaRecogida()));
+            String fechaDevolucion = sdf.format(new java.util.Date(reserva.getFechaDevolucion()));
             String fechasConcatenadas = fechaRecogida + " - " + fechaDevolucion;
             fechasTextView.setText(fechasConcatenadas);
         }

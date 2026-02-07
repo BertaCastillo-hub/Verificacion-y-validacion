@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 import androidx.room.TypeConverters; // Para el tipo de dato enumerado.
 
-@Database(entities = { Quad.class, Reserva.class, Casco.class }, version = 1, exportSchema = false)
+@Database(entities = { Quad.class, Reserva.class, Casco.class }, version = 2, exportSchema = false)
 @TypeConverters({ Converters.class })
 /** Base de datos para la aplicación que gestiona Quads, Reservas y Cascos. */
 public abstract class AppRoomDatabase extends RoomDatabase {
@@ -35,6 +35,7 @@ public abstract class AppRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppRoomDatabase.class, "app_database")
                             .addCallback(sRoomDatabaseCallback)
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }
@@ -72,10 +73,14 @@ public abstract class AppRoomDatabase extends RoomDatabase {
                 quadDao.insert(quad);
 
                 // Poblar la tabla 'Reserva' con datos de ejemplo para Reservas.
-                Reserva reserva1 = new Reserva(1, "Juan Pérez", 666111222, "20/11/2025", "22/11/2025", 5000);
+                // 20/11/2025 -> 1763683200000
+                // 22/11/2025 -> 1763856000000
+                Reserva reserva1 = new Reserva(1, "Juan Pérez", 666111222, 1763683200000L, 1763856000000L, 5000);
                 long idReserva1 = reservaDao.insert(reserva1); // Room genera el ID y lo devuelve
 
-                Reserva reserva2 = new Reserva(2, "Ana García", 666333444, "01/12/2025", "03/12/2025", 7550);
+                // 01/12/2025 -> 1764633600000
+                // 03/12/2025 -> 1764806400000
+                Reserva reserva2 = new Reserva(2, "Ana García", 666333444, 1764633600000L, 1764806400000L, 7550);
                 long idReserva2 = reservaDao.insert(reserva2); // Room genera otro ID y lo devuelve
 
                 // Poblar la tabla 'Casco' con datos de ejemplo para Cascos.

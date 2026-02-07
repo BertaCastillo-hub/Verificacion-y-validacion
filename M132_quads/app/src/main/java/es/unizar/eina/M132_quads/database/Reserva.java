@@ -28,15 +28,15 @@ public class Reserva {
     @ColumnInfo(name = "numeroMovil")
     private int numeroMovil;
 
-    /** Fecha de recogida de los quads de la reserva. */
+    /** Fecha de recogida de los quads de la reserva (Unix timestamp). */
     @NonNull
     @ColumnInfo(name = "fechaRecogida")
-    private String fechaRecogida;
+    private long fechaRecogida;
 
-    /** Fecha de devolución de los quads de la reserva. */
+    /** Fecha de devolución de los quads de la reserva (Unix timestamp). */
     @NonNull
     @ColumnInfo(name = "fechaDevolucion")
-    private String fechaDevolucion;
+    private long fechaDevolucion;
 
     /** Precio total de la reserva. */
     @NonNull
@@ -44,7 +44,7 @@ public class Reserva {
     private int precioTotal;
 
     public Reserva(@NonNull int idReserva, @NonNull String nombreCliente, @NonNull int numeroMovil,
-            @NonNull String fechaRecogida, @NonNull String fechaDevolucion, @NonNull int precioTotal) {
+            @NonNull long fechaRecogida, @NonNull long fechaDevolucion, @NonNull int precioTotal) {
         this.idReserva = idReserva;
         this.nombreCliente = nombreCliente;
         this.numeroMovil = numeroMovil;
@@ -84,22 +84,22 @@ public class Reserva {
     }
 
     /** Devuelve la fecha de recogida de la reserva */
-    public String getFechaRecogida() {
+    public long getFechaRecogida() {
         return this.fechaRecogida;
     }
 
     /** Permite actualizar la fecha de recogida de la reserva */
-    public void setFechaRecogida(String fecha) {
+    public void setFechaRecogida(long fecha) {
         this.fechaRecogida = fecha;
     }
 
     /** Devuelve la fecha de devolución de la reserva */
-    public String getFechaDevolucion() {
+    public long getFechaDevolucion() {
         return this.fechaDevolucion;
     }
 
     /** Permite actualizar la fecha de devolución de la reserva */
-    public void setFechaDevolucion(String fecha) {
+    public void setFechaDevolucion(long fecha) {
         this.fechaDevolucion = fecha;
     }
 
@@ -120,34 +120,18 @@ public class Reserva {
         return null;
     }
 
-    public static String validateFecha(String fecha) {
-        if (fecha == null) {
-            return "La fecha no puede ser nula";
-        }
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false);
-        try {
-            sdf.parse(fecha);
-        } catch (java.text.ParseException e) {
-            return "Fecha inválida o formato incorrecto (dd/MM/yyyy)";
+    // Ya no es necesario validar formato de string, pero podemos validar que sea
+    // positiva
+    public static String validateFecha(long fecha) {
+        if (fecha <= 0) {
+            return "Fecha inválida";
         }
         return null;
     }
 
-    public static String validateFechas(String fechaRecogida, String fechaDevolucion) {
-        if (fechaRecogida == null || fechaDevolucion == null) {
-            return null; // Se valida individualmente
-        }
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false);
-        try {
-            java.util.Date recogido = sdf.parse(fechaRecogida);
-            java.util.Date devuelto = sdf.parse(fechaDevolucion);
-            if (devuelto.before(recogido)) {
-                return "La fecha de devolución no puede ser anterior a la de recogida";
-            }
-        } catch (java.text.ParseException e) {
-            return null; // Se valida individualmente
+    public static String validateFechas(long fechaRecogida, long fechaDevolucion) {
+        if (fechaDevolucion < fechaRecogida) {
+            return "La fecha de devolución no puede ser anterior a la de recogida";
         }
         return null; // Válidas
     }
