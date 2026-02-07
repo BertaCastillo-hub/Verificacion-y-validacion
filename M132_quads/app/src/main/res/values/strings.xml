@@ -27,6 +27,12 @@
         <item>Fecha Recogida</item>
         <item>Fecha Devolución</item>
     </string-array>
+    <string-array name="opciones_filtro_reservas">
+        <item>Todas</item>
+        <item>Previstas</item>
+        <item>Vigentes</item>
+        <item>Caducadas</item>
+    </string-array>
     <string name="nuevo_quad">Nuevo quad</string>
     <string name="modificar_quad">Modificar quad</string>
     <string name="matricula">Matrícula</string>

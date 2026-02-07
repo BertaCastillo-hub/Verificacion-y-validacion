@@ -18,15 +18,40 @@ public class ReservaViewModel extends AndroidViewModel {
 
     private ReservaRepository mRepository;
 
-    private final MutableLiveData<String> mOrderBy = new MutableLiveData<>();
+    private final MutableLiveData<String> mOrderBy = new MutableLiveData<>("nombreCliente");
+    private final MutableLiveData<String> mFilterType = new MutableLiveData<>("Todas"); // Por defecto "Todas"
 
     private LiveData<List<Reserva>> mAllReservas;
+    // MediatorLiveData para combinar los cambios de orden y filtro
+    private final androidx.lifecycle.MediatorLiveData<FilterParams> mFilterParams = new androidx.lifecycle.MediatorLiveData<>();
 
     public ReservaViewModel(Application application) {
         super(application);
         mRepository = new ReservaRepository(application);
-        mAllReservas = Transformations.switchMap(mOrderBy,
-                orderBy -> mRepository.getOrderedReservas(orderBy));
+
+        // Inicializar el valor combinado
+        mFilterParams.setValue(new FilterParams("nombreCliente", "Todas"));
+
+        // Observar cambios en mOrderBy
+        mFilterParams.addSource(mOrderBy, orderBy -> {
+            FilterParams current = mFilterParams.getValue();
+            if (current != null) {
+                mFilterParams.setValue(new FilterParams(orderBy, current.filterType));
+            }
+        });
+
+        // Observar cambios en mFilterType
+        mFilterParams.addSource(mFilterType, filterType -> {
+            FilterParams current = mFilterParams.getValue();
+            if (current != null) {
+                mFilterParams.setValue(new FilterParams(current.orderBy, filterType));
+            }
+        });
+
+        // switchMap observa los cambios en el objeto combinado (FilterParams) y
+        // actualiza la lista
+        mAllReservas = Transformations.switchMap(mFilterParams,
+                params -> mRepository.getOrderedReservas(params.orderBy, params.filterType));
     }
 
     LiveData<List<Reserva>> getAllReservas() {
@@ -34,9 +59,22 @@ public class ReservaViewModel extends AndroidViewModel {
     }
 
     public void setOrderBy(String orderBy) {
-        // Al cambiar el valor de mOrderBy, se dispara automáticamente el switchMap,
-        // que a su vez actualiza mAllReservas, y finalmente la UI se refresca.
         mOrderBy.setValue(orderBy);
+    }
+
+    public void setFilter(String filterType) {
+        mFilterType.setValue(filterType);
+    }
+
+    // Clase auxiliar para mantener los dos estados
+    private static class FilterParams {
+        final String orderBy;
+        final String filterType;
+
+        FilterParams(String orderBy, String filterType) {
+            this.orderBy = orderBy;
+            this.filterType = filterType;
+        }
     }
 
     public long insert(Reserva reserva) {

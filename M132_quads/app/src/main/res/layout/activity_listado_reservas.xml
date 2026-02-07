@@ -46,6 +46,33 @@
         android:entries="@array/opciones_ordenar_reservas"
         app:layout_constraintTop_toBottomOf="@id/header_title"
         app:layout_constraintStart_toEndOf="@+id/label_ordenar_por"
+        app:layout_constraintEnd_toStartOf="@+id/label_visualizar_por" />
+
+    <!-- TEXTVIEW PARA LA ETIQUETA "Visualizar por" -->
+    <TextView
+        android:id="@+id/label_visualizar_por"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Visualizar por:"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@+id/spinner_filter"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner_filter"
+        app:layout_constraintStart_toEndOf="@+id/spinner_filter"
+        app:layout_constraintEnd_toStartOf="@+id/spinner_filter_type"/>
+
+    <!-- SPINNER PARA TIPO DE FILTRO -->
+    <Spinner
+        android:id="@+id/spinner_filter_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:minHeight="48dp"
+        android:entries="@array/opciones_filtro_reservas"
+        app:layout_constraintTop_toTopOf="@+id/spinner_filter"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner_filter"
+        app:layout_constraintStart_toEndOf="@+id/label_visualizar_por"
         app:layout_constraintEnd_toEndOf="parent" />
 
 

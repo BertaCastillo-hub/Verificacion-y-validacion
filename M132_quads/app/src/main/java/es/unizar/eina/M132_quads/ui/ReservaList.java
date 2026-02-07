@@ -128,6 +128,30 @@ public class ReservaList extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        // Configurar Spinner de Filtro
+        setupFilterSpinner();
+    }
+
+    private void setupFilterSpinner() {
+        Spinner spinner = findViewById(R.id.spinner_filter_type);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.opciones_filtro_reservas, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // El array de strings coincide con los valores que espera el ViewModel/DAO
+                String selected = parent.getItemAtPosition(position).toString();
+                mReservaViewModel.setFilter(selected);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     /**

@@ -34,7 +34,7 @@ public class ReservaRepository {
     public ReservaRepository(Application application) {
         AppRoomDatabase db = AppRoomDatabase.getDatabase(application);
         mReservaDao = db.reservaDao();
-        mAllReservas = mReservaDao.getOrderedReservas("nombreCliente");
+        mAllReservas = mReservaDao.getOrderedReservas("nombreCliente", "Todas", System.currentTimeMillis());
     }
 
     /**
@@ -156,15 +156,17 @@ public class ReservaRepository {
     }
 
     /**
-     * Este método no realiza ninguna lógica; simplemente delega la llamada
-     * al DAO, que es el que realmente ejecuta la consulta SQL a través de Room.
+     * Este método delega la llamada al DAO para obtener las reservas ordenadas y
+     * filtradas.
      *
-     * @param orderBy El criterio por el que se deben ordenar las reservas.
-     * @return Un LiveData que contiene la lista de reservas ordenadas.
+     * @param orderBy    El criterio por el que se deben ordenar las reservas.
+     * @param filterType El tipo de filtro a aplicar ("Todas", "Previstas",
+     *                   "Vigentes", "Caducadas").
+     * @return Un LiveData que contiene la lista de reservas ordenadas y filtradas.
      */
-    public LiveData<List<Reserva>> getOrderedReservas(String orderBy) {
-        // La llamada se pasa directamente al método correspondiente en el DAO.
-        return mReservaDao.getOrderedReservas(orderBy);
+    public LiveData<List<Reserva>> getOrderedReservas(String orderBy, String filterType) {
+        long currentTimestamp = System.currentTimeMillis();
+        return mReservaDao.getOrderedReservas(orderBy, filterType, currentTimestamp);
     }
 
     /**
