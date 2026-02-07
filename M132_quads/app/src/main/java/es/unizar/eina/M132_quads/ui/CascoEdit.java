@@ -205,6 +205,13 @@ public class CascoEdit extends AppCompatActivity {
             }
         }
 
+        // Comprobar solapes antes de guardar
+        if (mViewModel.checkOverlaps(cascosAGuardar, mReservaActual)) {
+            Toast.makeText(this, "Error: Algunos quads seleccionados están ocupados en esas fechas.", Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
         // Actualizar el precio total en la reserva antes de guardarla
         mReservaActual.setPrecioTotal(precioTotal);
 

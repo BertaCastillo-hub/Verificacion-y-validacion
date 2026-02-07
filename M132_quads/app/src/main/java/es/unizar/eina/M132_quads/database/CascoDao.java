@@ -31,15 +31,35 @@ public interface CascoDao {
     LiveData<List<Casco>> getOrderedCascos();
 
     /**
-     * Selecciona todos los registros de 'Casco' que coincidan con un 'idReserva' específico.
-     * La consulta SQL es directa: "SELECT * FROM casco WHERE id_reserva = :idReserva".
+     * Selecciona todos los registros de 'Casco' que coincidan con un 'idReserva'
+     * específico.
+     * La consulta SQL es directa: "SELECT * FROM casco WHERE id_reserva =
+     * :idReserva".
      *
      * @param idReserva El ID de la reserva por la que filtrar.
-     * @return Un LiveData<List<Casco>>, que notificará a los observadores cuando los datos
-     *         cambien. Room se encarga de que esta consulta se ejecute en un hilo secundario.
+     * @return Un LiveData<List<Casco>>, que notificará a los observadores cuando
+     *         los datos
+     *         cambien. Room se encarga de que esta consulta se ejecute en un hilo
+     *         secundario.
      */
     @Query("SELECT * FROM casco WHERE idReserva = :idReserva")
     LiveData<List<Casco>> getCascosForReserva(int idReserva);
+
+    /**
+     * Cuenta cuántas reservas EXISTEN que:
+     * 1. Incluyen el quad indicado (:matriculaQuad).
+     * 2. NO son la reserva actual (:currentReservaId).
+     * 3. Solapan en tiempo con el rango indicado (:fechaRecogida,
+     * :fechaDevolucion).
+     *
+     * Lógica de solape: (StartA <= EndB) y (StartB <= EndA)
+     */
+    @Query("SELECT COUNT(*) FROM Casco c " +
+            "INNER JOIN Reserva r ON c.idReserva = r.idReserva " +
+            "WHERE c.matriculaQuad = :matriculaQuad " +
+            "AND r.idReserva != :currentReservaId " +
+            "AND (r.fechaRecogida <= :fechaDevolucion AND r.fechaDevolucion >= :fechaRecogida)")
+    int countOverlappingReservas(String matriculaQuad, int currentReservaId, long fechaRecogida, long fechaDevolucion);
 
     /**
      * Borra todos los cascos asociados a un idReserva específico.
@@ -49,12 +69,14 @@ public interface CascoDao {
     void deleteCascosByReservaId(int idReserva);
 
     /**
-     * Método transaccional principal. Room ejecutará estas operaciones como una única
+     * Método transaccional principal. Room ejecutará estas operaciones como una
+     * única
      * transacción atómica.
-     * Primero borra todos los cascos existentes para la reserva. Después, inserta la
+     * Primero borra todos los cascos existentes para la reserva. Después, inserta
+     * la
      * nueva lista de cascos.
      *
-     * @param idReserva El ID de la reserva que se está actualizando.
+     * @param idReserva    El ID de la reserva que se está actualizando.
      * @param nuevosCascos La nueva lista de objetos Casco a insertar.
      */
     @Transaction
@@ -68,4 +90,3 @@ public interface CascoDao {
         }
     }
 }
-

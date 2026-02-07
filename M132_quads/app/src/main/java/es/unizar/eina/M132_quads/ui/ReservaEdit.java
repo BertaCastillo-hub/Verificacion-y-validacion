@@ -78,7 +78,7 @@ public class ReservaEdit extends AppCompatActivity {
                     mNombreText.setText(reserva.getNombreCliente());
                     mMovilText.setText(String.valueOf(reserva.getNumeroMovil()));
 
-                    // Convertir long a String para mostrar
+                    // Convertir long a String para mostrar con formato dd/MM/yyyy.
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     if (reserva.getFechaRecogida() > 0) {
                         mFechaRecogidaText.setText(sdf.format(new Date(reserva.getFechaRecogida())));

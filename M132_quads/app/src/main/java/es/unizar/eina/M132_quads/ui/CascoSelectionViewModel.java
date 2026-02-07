@@ -58,4 +58,20 @@ public class CascoSelectionViewModel extends AndroidViewModel {
     public LiveData<Reserva> getReservaById(int idReserva) {
         return mReservaRepository.getReservaById(idReserva);
     }
+
+    /**
+     * Comprueba si hay solapes de reservas para los quads seleccionados.
+     * Esta llamada es bloqueante (se ejecuta en el hilo actual), por lo que
+     * IDEALMENTE debería llamarse desde un hilo secundario, pero dado que
+     * el repositorio ya usa un Future para esperar el resultado, bloqueará
+     * el hilo UI brevemente.
+     *
+     * @param cascos  Lista de cascos seleccionados.
+     * @param reserva La reserva actual con las fechas.
+     * @return true si hay solape, false si no.
+     */
+    public boolean checkOverlaps(List<Casco> cascos, Reserva reserva) {
+        return mCascoRepository.checkOverlaps(cascos, reserva.getFechaRecogida(), reserva.getFechaDevolucion(),
+                reserva.getIdReserva());
+    }
 }
